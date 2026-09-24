@@ -49,9 +49,9 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694sarif1
         with:
           scanChangedFilesOnly: true
-          organization: test-perf
+          organization: va-github-actions
           projectKey: 40-pfs-sarif
-          codeScanUrl: https://perf.codescan.io/
+          codeScanUrl: https://preview.codescan.io/
           login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
 
           # SARIF generation enabled
@@ -65,9 +65,9 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694sarif1
         with:
           scanChangedFilesOnly: true
-          organization: test-perf
+          organization: va-github-actions
           projectKey: 40-pfs-sarif
-          codeScanUrl: https://perf.codescan.io/
+          codeScanUrl: https://preview.codescan.io/
           login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
 
           # SARIF generation enabled
