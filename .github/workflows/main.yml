@@ -1,5 +1,10 @@
 name: CI
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 env:
   SONAR_SCANNER_VERSION: 5.0.1.3006
 
@@ -25,13 +30,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Cache files
         uses: actions/cache@v4
         with:
           path: ~/.sonar
           key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          restore-keys: |
+            ${{ runner.os }}-sonar
 
       # -----------------------------
       # CodeScan Analysis - Push
@@ -41,13 +49,13 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694sarif1
         with:
           scanChangedFilesOnly: true
-          organization: va-github-actions
-          projectKey: 40-pfs
-          codeScanUrl: https://preview.codescan.io/
+          organization: test-perf
+          projectKey: 40-pfs-sarif
+          codeScanUrl: https://perf.codescan.io/
           login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
 
-          # SARIF generation disabled
-          # generateSarifFile: true
+          # SARIF generation enabled
+          generateSarifFile: true
 
       # -----------------------------
       # CodeScan Analysis - Pull Request
@@ -57,31 +65,43 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694sarif1
         with:
           scanChangedFilesOnly: true
-          organization: va-github-actions
-          projectKey: 40-pfs
-          codeScanUrl: https://preview.codescan.io/
+          organization: test-perf
+          projectKey: 40-pfs-sarif
+          codeScanUrl: https://perf.codescan.io/
           login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
 
-          # SARIF generation disabled
-          # generateSarifFile: true
+          # SARIF generation enabled
+          generateSarifFile: true
 
           args: |
             sonar.pullrequest.branch=${{ github.head_ref }}
             sonar.pullrequest.base=${{ github.base_ref }}
             sonar.pullrequest.key=${{ github.event.number }}
-      # -----------------------------
-      # SARIF Upload - Disabled
-      # -----------------------------
-      # - name: Upload SARIF file
-      #   uses: github/codeql-action/upload-sarif@v4
-      #   with:
-      #     sarif_file: codescan.sarif
 
       # -----------------------------
-      # SARIF Artifact Upload - Disabled
+      # Verify SARIF
       # -----------------------------
-      # - name: Archive CodeScan SARIF results
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: codescan.sarif
-      #     path: codescan.sarif
+      - name: Verify SARIF file
+        run: |
+          echo "Checking SARIF file..."
+          pwd
+          ls -la
+          ls -lh codescan.sarif
+
+      # -----------------------------
+      # SARIF Upload
+      # -----------------------------
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: codescan.sarif
+          wait-for-processing: true
+
+      # -----------------------------
+      # SARIF Artifact Upload
+      # -----------------------------
+      - name: Archive CodeScan SARIF results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codescan-sarif
+          path: codescan.sarif
