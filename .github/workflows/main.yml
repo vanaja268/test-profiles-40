@@ -50,9 +50,9 @@ jobs:
         with:
           scanChangedFilesOnly: true
           organization: va-github-actions
-          projectKey: 40-pfs-sarif
+          projectKey: sep-25
           codeScanUrl: https://preview.codescan.io/
-          login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
+          login: squ_907390617df362a09adb8cbfbcfbd3e38340c78b
 
           # SARIF generation enabled
           generateSarifFile: true
@@ -66,9 +66,9 @@ jobs:
         with:
           scanChangedFilesOnly: true
           organization: va-github-actions
-          projectKey: 40-pfs-sarif
+          projectKey: sep-25
           codeScanUrl: https://preview.codescan.io/
-          login: squ_bb693d11c55bd32bd9d9d518884516edbf29f680
+          login: squ_907390617df362a09adb8cbfbcfbd3e38340c78b
 
           # SARIF generation enabled
           generateSarifFile: true
